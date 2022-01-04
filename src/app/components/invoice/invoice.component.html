@@ -1,0 +1,91 @@
+<div class="container">
+    <div class="container-header">
+        <div class="title" [ngSwitch]=thereIsInvoice>
+            <h1>Invoices</h1>
+            <h2 *ngSwitchCase="false">No invoices</h2>
+            <h2 *ngSwitchCase="true">
+                <span class="for1023">There are</span>
+                {{invoiceNum}} 
+                <span class="for1023"> total </span>
+                invoices
+            </h2>
+        </div>
+        <div class="buttons">
+            <div class="filter">
+                <h2 (click)="toggleFilter()">Filter <span class="for1023">by status</span></h2>
+                <div class="downarrow"  (click)="toggleFilter()">
+                    <img src="assets/icon-arrow-down.svg" alt="arrow down">
+                </div>
+                <div class="dropDownContent-filter"
+                    *ngIf="toggleFilterMenu"
+                    @fade>
+                    <label class="customCheckBox" >Draft
+                        <input type="radio" (click)="filterInvoice('draft')" name="statusFilter" [checked]="statusFilter === 'draft' ? true : false">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="customCheckBox">Pending
+                        <input type="radio" (click)="filterInvoice('pending')" name="statusFilter" [checked]="statusFilter === 'pending' ? true : false">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="customCheckBox">Paid
+                        <input type="radio" (click)="filterInvoice('paid')" name="statusFilter" [checked]="statusFilter === 'paid' ? true : false">
+                        <span class="checkmark"></span>
+                    </label>
+                    <label class="customCheckBox">All
+                        <input type="radio" (click)="filterInvoice('all')" name="statusFilter" [checked]="statusFilter === 'all' ? true : false">
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="new" (click)="NewInvoiceToggle()">
+                <div class="plus">
+                    <img src="assets/icon-plus.svg" alt="plus icon">
+                </div>
+                <h2>New</h2>
+                <h2 class="for1023">Invoice</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-section" [ngSwitch]=thereIsInvoice>
+        <div class="not-found" *ngSwitchCase="false">
+            <div class="not-found-image">
+                <img src="assets/illustration-empty.svg" alt="illustration-empty">
+            </div>
+            <div class="container-text">
+                <h2>There is nothing here</h2>
+                <p>Create on invoice by clicking the <br />
+                    New button and get started</p>
+            </div>
+        </div>
+        <div class="found" *ngSwitchCase="true">
+            <div class="invoices" [@invoiceAni]="filterdInvoiceData.length">
+                <div class="invoice" *ngFor="let invoice of filterdInvoiceData">
+                    <div class="invoice-id">
+                        <h2><span>#</span>{{invoice.id}}</h2>
+                    </div>
+                    <div class="invoice-due">
+                        <h2>Due {{invoice.paymentDue | date:'dd MMM y'}}</h2>
+                    </div>
+                    <div class="invoice-cName">
+                        <h2>{{invoice.clientName}}</h2>
+                    </div>
+                    <div class="invoice-total">
+                        <h2>{{invoice.total | currency:'GBP':'symbol':'1.2-2'}}</h2>
+                    </div>
+                    <div class="invoice-status">
+                        <h2 #invS >{{invoice.status | titlecase}}</h2>
+                    </div>
+                    <div class="icon for768">
+                        <img src="assets/icon-arrow-right.svg" alt="icon arrow right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup">
+    <app-add-invoice *ngIf="addInvoice"></app-add-invoice>
+    <app-edit-invoice *ngIf="editInvoice"></app-edit-invoice>
+</div>
